@@ -3,6 +3,8 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.IllegalDomainStateException;
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.RoleType;
 import com.vault.core.domain.model.enums.UserStatus;
 
@@ -25,10 +27,10 @@ public class User extends BaseDomainEntity {
 
     public static User create(String email, String passwordHash) {
         if (email == null || !email.contains("@")) {
-            throw new IllegalArgumentException("A valid email is required.");
+            throw new InvalidDomainDataException("A valid email is required.");
         }
         if (passwordHash == null || passwordHash.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty.");
+            throw new InvalidDomainDataException("Password cannot be empty.");
         }
 
         return new User(
@@ -41,10 +43,10 @@ public class User extends BaseDomainEntity {
 
     public void updatePassword(String newPasswordHash) {
         if (newPasswordHash == null || newPasswordHash.trim().isEmpty()) {
-            throw new IllegalArgumentException("New password cannot be empty.");
+            throw new InvalidDomainDataException("New password cannot be empty.");
         }
         if (this.password.equals(newPasswordHash)) {
-            throw new IllegalArgumentException("New password must be different from the current one.");
+            throw new InvalidDomainDataException("New password must be different from the current one.");
         }
         this.password = newPasswordHash;
         this.updatedAt = LocalDateTime.now();
@@ -52,7 +54,7 @@ public class User extends BaseDomainEntity {
 
     public void suspend() {
         if (this.status == UserStatus.DELETED) {
-            throw new IllegalStateException("Cannot suspend a deleted user.");
+            throw new IllegalDomainStateException("Cannot suspend a deleted user.");
         }
         if (this.status == UserStatus.SUSPENDED) {
             return;
@@ -63,7 +65,7 @@ public class User extends BaseDomainEntity {
 
     public void activate() {
         if (this.status == UserStatus.DELETED) {
-            throw new IllegalStateException("Cannot activate a deleted user.");
+            throw new IllegalDomainStateException("Cannot activate a deleted user.");
         }
         if (this.status == UserStatus.ACTIVE) {
             return;

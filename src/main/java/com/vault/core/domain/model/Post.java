@@ -3,6 +3,8 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.IllegalDomainStateException;
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.PostStatus;
 
 public class Post extends BaseDomainEntity {
@@ -24,13 +26,13 @@ public class Post extends BaseDomainEntity {
 
     public static Post create(UUID authorId, String content, String mediaUrl) {
         if (authorId == null) {
-            throw new IllegalArgumentException("Author ID cannot be null.");
+            throw new InvalidDomainDataException("Author ID cannot be null.");
         }
         if (content == null || content.trim().isEmpty()) {
-            throw new IllegalArgumentException("Post content cannot be empty.");
+            throw new InvalidDomainDataException("Post content cannot be empty.");
         }
         if (content.length() > 500) {
-            throw new IllegalArgumentException("Post content exceeds maximum allowed length of 500 characters.");
+            throw new InvalidDomainDataException("Post content exceeds maximum allowed length of 500 characters.");
         }
 
         return new Post(
@@ -43,10 +45,10 @@ public class Post extends BaseDomainEntity {
 
     public void editContent(String newContent, String newMediaUrl) {
         if (newContent == null || newContent.trim().isEmpty()) {
-            throw new IllegalArgumentException("New content cannot be empty.");
+            throw new InvalidDomainDataException("New content cannot be empty.");
         }
         if (newContent.length() > 500) {
-            throw new IllegalArgumentException("New content exceeds maximum allowed length of 500 characters.");
+            throw new InvalidDomainDataException("New content exceeds maximum allowed length of 500 characters.");
         }
 
         String sanitizedContent = newContent.trim();
@@ -67,7 +69,7 @@ public class Post extends BaseDomainEntity {
 
     public void hide() {
         if (this.status == PostStatus.HIDDEN) {
-            throw new IllegalStateException("The post is already hidden.");
+            throw new IllegalDomainStateException("The post is already hidden.");
         }
         this.status = PostStatus.HIDDEN;
         this.updatedAt = LocalDateTime.now();
@@ -75,7 +77,7 @@ public class Post extends BaseDomainEntity {
 
     public void makePublic() {
         if (this.status == PostStatus.PUBLISHED) {
-            throw new IllegalStateException("The post is already published.");
+            throw new IllegalDomainStateException("The post is already published.");
         }
         this.status = PostStatus.PUBLISHED;
         this.updatedAt = LocalDateTime.now();

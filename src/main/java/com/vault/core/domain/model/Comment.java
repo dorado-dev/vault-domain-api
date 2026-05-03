@@ -3,6 +3,8 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
+
 public class Comment extends BaseDomainEntity {
     private UUID postId;
     private UUID authorId;
@@ -20,13 +22,13 @@ public class Comment extends BaseDomainEntity {
 
     public static Comment create(UUID authorId, UUID postId, String content) {
         if (authorId == null || postId == null) {
-            throw new IllegalArgumentException("Author ID and Post ID cannot be null.");
+            throw new InvalidDomainDataException("Author ID and Post ID cannot be null.");
         }
         if (content == null || content.trim().isEmpty()) {
-            throw new IllegalArgumentException("Comment content cannot be empty.");
+            throw new InvalidDomainDataException("Comment content cannot be empty.");
         }
         if (content.length() > 300) {
-            throw new IllegalArgumentException("Comment exceeds maximum allowed length of 300 characters.");
+            throw new InvalidDomainDataException("Comment exceeds maximum allowed length of 300 characters.");
         }
 
         return new Comment(
@@ -38,10 +40,10 @@ public class Comment extends BaseDomainEntity {
 
     public void editContent(String newContent) {
         if (newContent == null || newContent.trim().isEmpty()) {
-            throw new IllegalArgumentException("New content cannot be empty.");
+            throw new InvalidDomainDataException("New content cannot be empty.");
         }
         if (newContent.length() > 300) {
-            throw new IllegalArgumentException("New content exceeds maximum allowed length of 300 characters.");
+            throw new InvalidDomainDataException("New content exceeds maximum allowed length of 300 characters.");
         }
 
         String sanitizedContent = newContent.trim();

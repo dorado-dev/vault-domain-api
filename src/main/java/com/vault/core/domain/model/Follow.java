@@ -3,6 +3,8 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
+
 public class Follow extends BaseDomainEntity {
     private UUID followerId;
     private UUID followingId;
@@ -18,11 +20,11 @@ public class Follow extends BaseDomainEntity {
 
     public static Follow create(UUID followerId, UUID followingId) {
         if (followerId == null || followingId == null) {
-            throw new IllegalArgumentException("Follower ID and Following ID cannot be null.");
+            throw new InvalidDomainDataException("Follower ID and Following ID cannot be null.");
         }
 
         if (followerId.equals(followingId)) {
-            throw new IllegalArgumentException("A user cannot follow themselves.");
+            throw new InvalidDomainDataException("A user cannot follow themselves.");
         }
 
         return new Follow(

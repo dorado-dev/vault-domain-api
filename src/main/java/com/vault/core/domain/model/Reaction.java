@@ -3,6 +3,7 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.ReactionType;
 
 public class Reaction extends BaseDomainEntity {
@@ -22,10 +23,10 @@ public class Reaction extends BaseDomainEntity {
 
     public static Reaction create(UUID userId, UUID postId, ReactionType type) {
         if (userId == null || postId == null) {
-            throw new IllegalArgumentException("User ID and Post ID cannot be null.");
+            throw new InvalidDomainDataException("User ID and Post ID cannot be null.");
         }
         if (type == null) {
-            throw new IllegalArgumentException("A reaction type must be provided.");
+            throw new InvalidDomainDataException("A reaction type must be provided.");
         }
 
         return new Reaction(
@@ -37,10 +38,10 @@ public class Reaction extends BaseDomainEntity {
 
     public void changeType(ReactionType newType) {
         if (newType == null) {
-            throw new IllegalArgumentException("The new reaction type cannot be null.");
+            throw new InvalidDomainDataException("The new reaction type cannot be null.");
         }
         if (this.type == newType) {
-            throw new IllegalArgumentException("The reaction is already of this type.");
+            throw new InvalidDomainDataException("The reaction is already of this type.");
         }
 
         this.type = newType;

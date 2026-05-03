@@ -3,6 +3,8 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.IllegalDomainStateException;
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.ReportReason;
 import com.vault.core.domain.model.enums.ReportStatus;
 
@@ -27,10 +29,10 @@ public class Report extends BaseDomainEntity {
 
     public static Report create(UUID reporterId, UUID postId, ReportReason reason, String details) {
         if (reporterId == null || postId == null) {
-            throw new IllegalArgumentException("Reporter ID and Post ID cannot be null.");
+            throw new InvalidDomainDataException("Reporter ID and Post ID cannot be null.");
         }
         if (reason == null) {
-            throw new IllegalArgumentException("A report reason must be provided.");
+            throw new InvalidDomainDataException("A report reason must be provided.");
         }
 
         return new Report(
@@ -56,7 +58,7 @@ public class Report extends BaseDomainEntity {
 
     private void ensureIsPending() {
         if (this.status != ReportStatus.OPEN) {
-            throw new IllegalStateException("Only open reports can be processed. Current status: " + this.status);
+            throw new IllegalDomainStateException("Only open reports can be processed. Current status: " + this.status);
         }
     }
 

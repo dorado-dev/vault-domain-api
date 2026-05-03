@@ -3,6 +3,7 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.NotificationType;
 
 public class Notification extends BaseDomainEntity {
@@ -27,13 +28,13 @@ public class Notification extends BaseDomainEntity {
 
     public static Notification create(UUID recipientId, NotificationType type, String message, UUID referenceId) {
         if (recipientId == null) {
-            throw new IllegalArgumentException("Recipient ID cannot be null.");
+            throw new InvalidDomainDataException("Recipient ID cannot be null.");
         }
         if (type == null) {
-            throw new IllegalArgumentException("Notification type cannot be null.");
+            throw new InvalidDomainDataException("Notification type cannot be null.");
         }
         if (message == null || message.trim().isEmpty()) {
-            throw new IllegalArgumentException("Notification message cannot be empty.");
+            throw new InvalidDomainDataException("Notification message cannot be empty.");
         }
 
         return new Notification(

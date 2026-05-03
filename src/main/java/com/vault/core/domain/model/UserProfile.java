@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
+
 public class UserProfile extends BaseDomainEntity {
     private UUID userId;
     private String firstName;
@@ -32,10 +34,10 @@ public class UserProfile extends BaseDomainEntity {
 
     public static UserProfile createDefault(UUID userId, String username) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null.");
+            throw new InvalidDomainDataException("User ID cannot be null.");
         }
         if (username == null || username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty.");
+            throw new InvalidDomainDataException("Username cannot be empty.");
         }
 
         return new UserProfile(
@@ -52,10 +54,10 @@ public class UserProfile extends BaseDomainEntity {
 
     public void updateInfo(String firstName, String lastName, String bio, String location, LocalDate birthDate) {
         if (bio != null && bio.length() > 160) {
-            throw new IllegalArgumentException("Bio cannot exceed 160 characters.");
+            throw new InvalidDomainDataException("Bio cannot exceed 160 characters.");
         }
         if (birthDate != null && birthDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Birth date cannot be in the future.");
+            throw new InvalidDomainDataException("Birth date cannot be in the future.");
         }
 
         this.firstName = firstName != null && !firstName.trim().isEmpty() ? firstName.trim() : null;

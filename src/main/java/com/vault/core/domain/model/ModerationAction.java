@@ -3,6 +3,7 @@ package com.vault.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.vault.core.domain.exception.InvalidDomainDataException;
 import com.vault.core.domain.model.enums.ModerationActionType;
 import com.vault.core.domain.model.enums.TargetType;
 
@@ -32,13 +33,13 @@ public class ModerationAction extends BaseDomainEntity {
             ModerationActionType actionType, String reason, UUID reportId) {
 
         if (moderatorId == null || targetId == null) {
-            throw new IllegalArgumentException("Moderator and target are mandatory for auditing purposes.");
+            throw new InvalidDomainDataException("Moderator and target are mandatory for auditing purposes.");
         }
         if (targetType == null || actionType == null) {
-            throw new IllegalArgumentException("Target type and action type cannot be null.");
+            throw new InvalidDomainDataException("Target type and action type cannot be null.");
         }
         if (reason == null || reason.trim().isEmpty()) {
-            throw new IllegalArgumentException("A reason must be provided for the moderation action.");
+            throw new InvalidDomainDataException("A reason must be provided for the moderation action.");
         }
 
         return new ModerationAction(
