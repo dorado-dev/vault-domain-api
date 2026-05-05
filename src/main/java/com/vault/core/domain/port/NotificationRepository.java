@@ -15,4 +15,6 @@ public interface NotificationRepository {
 
     long countUnreadByRecipientId(UUID recipientId);
 
+    List<Notification> findUnreadByRecipientId(UUID recipientId);
+
 }
