@@ -48,7 +48,7 @@ public class ModerationAction extends BaseDomainEntity {
                 targetId,
                 targetType,
                 actionType,
-                reason,
+                reason.trim(),
                 reportId);
     }
 
